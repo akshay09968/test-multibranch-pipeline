@@ -1,35 +1,44 @@
-pipeline {
-    agent any 
-    environment {
-    DOCKERHUB_CREDENTIALS = credentials('valaxy-dockerhub')
+pipeline{
+    agent{
+        label "node"
     }
-    stages { 
-        stage('SCM Checkout') {
+    stages{
+        stage("Echo a line"){
             steps{
-            git 'https://github.com/ravdy/nodejs-demo.git'
+                echo 'This is step one'
             }
         }
 
-        stage('Build docker image') {
-            steps {  
-                sh 'docker build -t valaxy/nodeapp:$BUILD_NUMBER .'
-            }
-        }
-        stage('login to dockerhub') {
+        stage("Run a command"){
             steps{
-                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+                sh 'pwd'
             }
         }
-        stage('push image') {
+
+        stage("Run multiple commands"){
             steps{
-                sh 'docker push valaxy/nodeapp:$BUILD_NUMBER'
+                sh '''pwd
+                    ls
+                    date
+                    cat'''
             }
         }
-}
-post {
-        always {
-            sh 'docker logout'
+
+       stage("D"){
+            steps{
+                echo "========executing A========"
+            }
+        }
+    }
+    post{
+        always{
+            echo "========always========"
+        }
+        success{
+            echo "========pipeline executed successfully ========"
+        }
+        failure{
+            echo "========pipeline execution failed========"
         }
     }
 }
-
