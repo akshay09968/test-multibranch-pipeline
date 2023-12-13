@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    environment {
+        BUILD_USER = "${BUILD_USER}"
+    }
     stages {
         stage("Echo a line") {
             steps {
@@ -33,12 +36,16 @@ pipeline {
             echo "========always========"
         }
         success {
-            echo "========pipeline executed successfully ========"
-            echo "User who pushed changes: ${CHANGE_AUTHOR_DISPLAY_NAME}"
+            script {
+                echo "========pipeline executed successfully ========"
+                echo "User who pushed changes: ${BUILD_USER}"
+            }
         }
         failure {
-            echo "========pipeline execution failed========"
-            echo "User who pushed changes: ${CHANGE_AUTHOR_DISPLAY_NAME}"
+            script {
+                echo "========pipeline execution failed========"
+                echo "User who pushed changes: ${BUILD_USER}"
+            }
         }
     }
 }
