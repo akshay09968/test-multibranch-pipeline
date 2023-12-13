@@ -1,20 +1,20 @@
-pipeline{
+pipeline {
     agent any
-    stages{
-        stage("Echo a line"){
-            steps{
+    stages {
+        stage("Echo a line") {
+            steps {
                 echo 'This is step one'
             }
         }
 
-        stage("Run a command"){
-            steps{
+        stage("Run a command") {
+            steps {
                 sh 'pwd'
             }
         }
 
-        stage("Run multiple commands"){
-            steps{
+        stage("Run multiple commands") {
+            steps {
                 sh '''pwd
                     ls
                     date
@@ -22,21 +22,23 @@ pipeline{
             }
         }
 
-       stage("D"){
-            steps{
+        stage("D") {
+            steps {
                 echo "========executing A========"
             }
         }
     }
-    post{
-        always{
+    post {
+        always {
             echo "========always========"
         }
-        success{
+        success {
             echo "========pipeline executed successfully ========"
+            echo "User who pushed changes: ${CHANGE_AUTHOR_DISPLAY_NAME}"
         }
-        failure{
+        failure {
             echo "========pipeline execution failed========"
+            echo "User who pushed changes: ${CHANGE_AUTHOR_DISPLAY_NAME}"
         }
     }
 }
