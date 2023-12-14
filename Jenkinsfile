@@ -24,5 +24,5 @@ pipeline {
 }
 
 triggers {
-    githubPush(branchFilter: 'main, dev, staging, prod')
+    githubPush(branchFilter: 'main, dev, staging, master')
 }
