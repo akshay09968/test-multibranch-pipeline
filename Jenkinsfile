@@ -52,45 +52,39 @@
 
 
 pipeline {
-  agent any
+    agent any
 
-  stages {
-    stage('Checkout') {
-      steps {
-        checkout scm
-        echo "** Checkout completed by ${CHANGE_AUTHOR} **"
-      }
-    }
-    // Add other stages specific to your pipeline
+    stages {
+        stage('Fetch push event details') {
+            steps {
+                script {
+                    // Get the GitHub API token from Jenkins credentials
+                    def token = credentials['github-token'].token
 
-    post {
-      success {
-        echo "Build successful! Initiated by ${CHANGE_AUTHOR}"
-      }
-      failure {
-        echo "Build failed! Triggered by ${CHANGE_AUTHOR}"
-      }
-    }
-  }
+                    // Get the commit SHA from the environment variable
+                    def commitSha = env.GIT_SHA
 
-  triggers {
-    githubPush {
-      branchFilter 'main, dev, staging, prod'
-    }
-  }
+                    // Build the API URL
+                    def url = "https://api.github.com/repos/${env.GIT_REPO_OWNER}/${env.GIT_REPO_NAME}/commits/${commitSha}"
 
-  scm {
-    git {
-      branchSource branchSet = [
-        branch 'main',
-        branch 'dev',
-        branch 'staging',
-        branch 'prod'
-      ]
-      domain 'github.com'
-      credentialsId 'github' // Replace with your actual credentials ID
+                    // Send a GET request to the API
+                    def response = sh(
+                        command: "curl -X GET -H 'Authorization: token ${token}' ${url}",
+                        returnStdout: true
+                    )
+
+                    // Parse the JSON response
+                    def json = new groovy.json.JsonSlurper().parseText(response)
+
+                    // Extract the user's name from the "committer" object
+                    def userName = json.commit.committer.login
+
+                    // Display the user's name below the build number
+                    echo "Pushed by: ${userName}"
+                }
+            }
+        }
     }
-  }
 }
 
 
