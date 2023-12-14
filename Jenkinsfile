@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                echo "Started by Github push by ${GIT_PUSHER_NAME}"
+                echo "Started by Github push by ${CHANGE_AUTHOR}"
             }
         }
     }
@@ -18,3 +18,4 @@ pipeline {
         }
     }
 }
+
