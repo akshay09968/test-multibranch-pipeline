@@ -21,10 +21,8 @@ pipeline {
             echo "Build failed! Triggered by ${CHANGE_AUTHOR}"
         }
     }
+}
 
-    triggers {
-        githubPush {
-            branchFilter 'main, dev, staging, prod'
-        }
-    }
+triggers {
+    githubPush(branchFilter: 'main, dev, staging, prod')
 }
