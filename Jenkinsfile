@@ -59,7 +59,7 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                sh 'make build' # Replace with your build command
+                sh 'make build' 
                 echo "Started by Github push by ${GIT_PUSHER_NAME}"
             }
         }
