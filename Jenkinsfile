@@ -80,7 +80,7 @@ pipeline {
                     def userName = json.commit.committer.login
 
                     // Display the user's name below the build number
-                    echo "Pushed by: ${userName}"
+                    echo "Pushed by:: ${userName} "
                 }
             }
         }
