@@ -53,45 +53,32 @@
 
 
 pipeline {
-  agent any
+    agent any
 
-  stages {
-    stage('Checkout') {
-      steps {
-        checkout scm
-        echo "** Checkout completed by ${CHANGE_AUTHOR} **"
-      }
+    stages {
+        stage('Checkout') {
+            steps {
+                script {
+                    checkout([$class: 'GitSCM', branches: [[name: '*/main'], [name: '*/dev'], [name: '*/staging'], [name: '*/prod']], userRemoteConfigs: [[url: 'https://github.com/akshay09968/test-multibranch-pipeline.git', credentialsId: 'github']]])
+                }
+                echo "** Checkout completed by ${currentBuild.changeSets.collect { it.author.fullName }.join(', ')} **"
+            }
+        }
+        // Add other stages specific to your pipeline
     }
-    // Add other stages specific to your pipeline
 
     post {
-      success {
-        echo "Build successful! Initiated by ${CHANGE_AUTHOR}"
-      }
-      failure {
-        echo "Build failed! Triggered by ${CHANGE_AUTHOR}"
-      }
+        success {
+            echo "Build successful! Initiated by ${currentBuild.changeSets.collect { it.author.fullName }.join(', ')}"
+        }
+        failure {
+            echo "Build failed! Triggered by ${currentBuild.changeSets.collect { it.author.fullName }.join(', ')}"
+        }
     }
-  }
+}
 
-  triggers {
-    githubPush {
-      branchFilter 'main, dev, staging, prod'
-    }
-  }
-
-  scm {
-    git {
-      branchSource branchSet = [
-        branch 'main',
-        branch 'dev',
-        branch 'staging',
-        branch 'prod'
-      ]
-      domain 'github.com'
-      credentialsId 'github' // Replace with your actual credentials ID
-    }
-  }
+triggers {
+    githubPush(branchFilter: 'main, dev, staging, master')
 }
 
 
