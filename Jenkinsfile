@@ -58,7 +58,7 @@ pipeline {
         stage('Build') {
             steps {
                 sh 'make build' # Replace with your build command
-                echo "Started by GitLab push by ${GIT_PUSHER_NAME}"
+                echo "Started by Github push by ${GIT_PUSHER_NAME}"
             }
         }
     }
