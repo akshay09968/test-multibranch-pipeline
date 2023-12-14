@@ -9,14 +9,14 @@ pipeline {
       }
     }
     // Add other stages specific to your pipeline
+  }
 
-    post {
-      success {
-        echo "Build successful! Initiated by ${CHANGE_AUTHOR}"
-      }
-      failure {
-        echo "Build failed! Triggered by ${CHANGE_AUTHOR}"
-      }
+  post {
+    success {
+      echo "Build successful! Initiated by ${CHANGE_AUTHOR}"
+    }
+    failure {
+      echo "Build failed! Triggered by ${CHANGE_AUTHOR}"
     }
   }
 
@@ -26,16 +26,16 @@ pipeline {
     }
   }
 
+  options {
+    skipDefaultCheckout() // This avoids redundant checkout, as you are already checking out in the 'Checkout' stage
+  }
+
   scm {
     git {
-      branchSource branchSet = [
-        branch 'main',
-        branch 'dev',
-        branch 'staging',
-        branch 'prod'
-      ]
-      domain 'github.com'
-      credentialsId 'github' // Replace with your actual credentials ID
+      branches('main', 'dev', 'staging', 'master') // Correct syntax for defining branches
+      userRemoteConfigs([
+        [url: 'https://github.com/akshay09968/test-multibranch-pipeline.git', credentialsId: 'github']
+      ])
     }
   }
 }
