@@ -4,27 +4,25 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                script {
-                    checkout([$class: 'GitSCM', branches: [[name: '*/main'], [name: '*/dev'], [name: '*/staging'], [name: '*/prod']], userRemoteConfigs: [[url: 'https://github.com/akshay09968/test-multibranch-pipeline.git', credentialsId: 'github']]])
-                }
-                echo "** Checkout completed by ${CHANGE_AUTHOR} **"
+                checkout scm
             }
         }
-        // Add other stages specific to your pipeline
+        stage('Build') {
+            steps {
+            }
+        }
     }
 
     post {
         success {
-            echo "Build successful! Initiated by ${CHANGE_AUTHOR}"
-        }
-        failure {
-            echo "Build failed! Triggered by ${CHANGE_AUTHOR}"
-        }
-    }
-
-    triggers {
-        githubPush {
-            branchFilter 'main, dev, staging, prod'
+            script {
+                // Print information about the GitHub push event
+                echo "GitHub Push Event:"
+                echo "  ID: ${CHANGE_ID}"
+                echo "  URL: ${CHANGE_URL}"
+                echo "  Title: ${CHANGE_TITLE}"
+                echo "  Author: ${CHANGE_AUTHOR}"
+            }
         }
     }
 }
