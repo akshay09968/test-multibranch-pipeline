@@ -6,7 +6,7 @@ pipeline {
             steps {
                 script {
                     // Get the GitHub API token from Jenkins credentials
-                    def token = credentials['github'].token
+                    def token = credentials['github-token'].token
 
                     // Get the commit SHA from the environment variable
                     def commitSha = env.GIT_SHA
