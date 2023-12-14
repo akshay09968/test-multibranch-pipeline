@@ -1,21 +1,20 @@
 pipeline {
-    agent any
+  agent any
 
-    stages {
-        stage('Build') {
-            steps {
-                echo "Started by Github push by ${CHANGE_AUTHOR}"
-            }
-        }
+  stages {
+    stage('Build') {
+      steps {
+        echo "Started by GitLab push by ${GIT_PUSHER_NAME}"
+      }
     }
+  }
 
-    post {
-        success {
-            echo "Build successful!"
-        }
-        failure {
-            echo "Build failed!"
-        }
+  post {
+    success {
+      echo "Build successful!"
     }
+    failure {
+      echo "Build failed!"
+    }
+  }
 }
-
