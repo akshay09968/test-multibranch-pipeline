@@ -59,29 +59,19 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                script {
-                    // Option 1: Use GIT_PUSHER_NAME environment variable (requires no additional plugins)
-                    String username = env.GIT_PUSHER_NAME
-                    echo "Build started by: $username"
-
-                    // Option 2: Use Jenkins Build User Vars Plugin (requires plugin installation)
-                    // def user = env.BUILD_USER
-                    // echo "Build started by: $user"
-
-                    // Option 3: Custom script to retrieve username (more flexibility, but complex)
-                    // String username = sh(returnStdout: true, script: 'git log -1 --pretty=format:"%an"')
-                    // echo "Build started by: $username"
-
-                    // Your build steps here...
-                }
+                sh 'make build' # Replace with your build command
+                echo "Started by Github push by ${GIT_PUSHER_NAME}"
             }
         }
     }
 
     post {
         success {
-            // You can use the username variable in post-build steps as well
-            echo "Build completed successfully by ${env.GIT_PUSHER_NAME}"
+            echo "Build successful!"
+        }
+        failure {
+            echo "Build failed!"
         }
     }
 }
+
